@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle de Bots</title>
+    <style>
+        /* Reset e estilos básicos */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 1rem;
+            margin: 0 auto;
+        }
+        
+        /* Estilos de login */
+        .login-container {
+            background-color: white;
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #1e3a8a;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.875rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            cursor: pointer;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .login-help {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        /* Estilos do dashboard */
+        .dashboard {
+            display: none; /* Escondido inicialmente */
+        }
+        
+        .navbar {
+            background-color: #2563eb;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background-color: #1d4ed8;
+            border: none;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+        
+        .tab-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .tab {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom-color: #2563eb;
+            color: #2563eb;
+        }
+        
+        .tab-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+        }
+        
+        .panel-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .bot-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: box-shadow 0.3s;
+        }
+        
+        .bot-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .bot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .bot-name-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-indicator {
+            margin-right: 0.5rem;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .status-online {
+            background-color: #10b981;
+        }
+        
+        .status-offline {
+            background-color: #ef4444;
+        }
+        
+        .bot-name {
+            font-weight: 500;
+        }
+        
+        .bot-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #2563eb;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .btn-success {
+            background-color: #10b981;
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        .bot-details {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .text-green {
+            color: #10b981;
+            font-weight: 500;
+        }
+        
+        .text-red {
+            color: #ef4444;
+            font-weight: 500;
+        }
+        
+        /* Estilos para os logs */
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .back-link {
+            font-size: 0.875rem;
+            color: #2563eb;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .logs-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .logs-header-row {
+            background-color: #f3f4f6;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: grid;
+            grid-template-columns: 2fr 1fr 3fr;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        
+        .logs-body {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .log-row {
+            padding: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: grid;
+            grid-template-columns: 2fr 1fr 3fr;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .log-row:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+        
+        .log-time {
+            color: #6b7280;
+        }
+        
+        .log-type {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .log-type-info {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .log-type-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .log-type-error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #1f2937;
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="login-screen" class="container">
+        <div class="login-container">
+            <h2 class="login-title">Painel de Controle de Bots</h2>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="username">Login</label>
+                    <input class="form-input" id="username" type="text" placeholder="Login">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Senha</label>
+                    <input class="form-input" id="password" type="password" placeholder="Senha">
+                </div>
+                
+                <div id="error-message" class="error-msg" style="display: none;"></div>
+                
+                <button class="btn" type="submit">Entrar</button>
+            </form>
+            
+            <div class="login-help">
+                Use Login: "Login" / Senha: "Login"
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-content">
+                <h1 class="navbar-title">Painel de Controle</h1>
+                <button id="logout-btn" class="logout-btn">
+                    <span style="margin-right: 4px;">↩</span> Sair
+                </button>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <!-- Tabs -->
+            <div class="tab-container">
+                <div class="tabs">
+                    <div id="status-tab" class="tab active">Status dos Bots</div>
+                    <div id="logs-tab" class="tab">Logs</div>
+                </div>
+            </div>
+            
+            <!-- Conteúdo das tabs -->
+            <div class="tab-content">
+                <!-- Tab de Status -->
+                <div id="status-content">
+                    <h2 class="panel-title">Status dos Bots</h2>
+                    <div id="bots-container">
+                        <!-- Bots serão inseridos aqui via JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Tab de Logs -->
+                <div id="logs-content" style="display: none;">
+                    <div class="logs-header">
+                        <h2 id="logs-title" class="panel-title">Logs do Bot</h2>
+                        <a id="back-to-status" class="back-link">Voltar para Status</a>
+                    </div>
+                    
+                    <div class="logs-container">
+                        <div class="logs-header-row">
+                            <div>Hora</div>
+                            <div>Tipo</div>
+                            <div>Mensagem</div>
+                        </div>
+                        <div id="logs-body" class="logs-body">
+                            <!-- Logs serão inseridos aqui via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            Painel de Controle de Bots © 2025
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Dados simulados de bots
+        const bots = [
+            { 
+                id: 1, 
+                name: 'Bot de Atendimento', 
+                status: 'online', 
+                lastRestart: '20/03/2025 10:45',
+                logs: []
+            },
+            { 
+                id: 2, 
+                name: 'Bot de Vendas', 
+                status: 'offline', 
+                lastRestart: '19/03/2025 18:22',
+                logs: []
+            }
+        ];
+        
+        // Gerar logs de exemplo
+        function generateLogs() {
+            bots.forEach(bot => {
+                const randomLogs = [];
+                for (let i = 0; i < 15; i++) {
+                    const date = new Date();
+                    date.setMinutes(date.getMinutes() - i * 15);
+                    const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+                    
+                    const logTypes = ['info', 'warning', 'error'];
+                    const randomType = logTypes[Math.floor(Math.random() * logTypes.length)];
+                    
+                    let message = '';
+                    if (randomType === 'info') {
+                        message = `Serviço funcionando normalmente`;
+                    } else if (randomType === 'warning') {
+                        message = `Latência alta detectada`;
+                    } else {
+                        message = `Falha na conexão com API externa`;
+                    }
+                    
+                    randomLogs.push({
+                        timestamp: formattedDate,
+                        type: randomType,
+                        message: message
+                    });
+                }
+                bot.logs = randomLogs;
+            });
+        }
+        
+        // Elementos do DOM
+        const loginScreen = document.getElementById('login-screen');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('error-message');
+        const logoutBtn = document.getElementById('logout-btn');
+        const statusTab = document.getElementById('status-tab');
+        const logsTab = document.getElementById('logs-tab');
+        const statusContent = document.getElementById('status-content');
+        const logsContent = document.getElementById('logs-content');
+        const botsContainer = document.getElementById('bots-container');
+        const logsTitle = document.getElementById('logs-title');
+        const logsBody = document.getElementById('logs-body');
+        const backToStatus = document.getElementById('back-to-status');
+        
+        // Variável para armazenar o bot selecionado
+        let selectedBot = null;
+        
+        // Função para fazer login
+        function login(username, password) {
+            if (username === 'Login' && password === 'Login') {
+                loginScreen.style.display = 'none';
+                dashboard.style.display = 'block';
+                return true;
+            } else {
+                errorMessage.textContent = 'Login ou senha incorretos';
+                errorMessage.style.display = 'block';
+                return false;
+            }
+        }
+        
+        // Função para fazer logout
+        function logout() {
+            loginScreen.style.display = 'block';
+            dashboard.style.display = 'none';
+            usernameInput.value = '';
+            passwordInput.value = '';
+            errorMessage.style.display = 'none';
+        }
+        
+        // Função para exibir a tab de status
+        function showStatusTab() {
+            statusTab.classList.add('active');
+            logsTab.classList.remove('active');
+            statusContent.style.display = 'block';
+            logsContent.style.display = 'none';
+            selectedBot = null;
+        }
+        
+        // Função para exibir a tab de logs
+        function showLogsTab() {
+            if (selectedBot) {
+                statusTab.classList.remove('active');
+                logsTab.classList.add('active');
+                statusContent.style.display = 'none';
+                logsContent.style.display = 'block';
+                
+                // Atualizar título
+                logsTitle.textContent = `${selectedBot.name} - Logs`;
+                
+                // Renderizar logs
+                renderLogs();
+            }
+        }
+        
+        // Função para renderizar bots
+        function renderBots() {
+            botsContainer.innerHTML = '';
+            
+            bots.forEach(bot => {
+                const botCard = document.createElement('div');
+                botCard.className = 'bot-card';
+                
+                const statusClass = bot.status === 'online' ? 'status-online' : 'status-offline';
+                const statusText = bot.status === 'online' ? 'Online' : 'Offline';
+                
+                botCard.innerHTML = `
+                    <div class="bot-header">
+                        <div class="bot-name-container">
+                            <span class="status-indicator ${statusClass}"></span>
+                            <h3 class="bot-name">${bot.name}</h3>
+                        </div>
+                        <div class="bot-actions">
+                            <button class="btn-sm btn-primary view-logs-btn" data-id="${bot.id}">
+                                <span style="margin-right: 4px;">🗒️</span> Logs
+                            </button>
+                            <button class="btn-sm btn-success restart-btn" data-id="${bot.id}">
+                                <span style="margin-right: 4px;">🔄</span> Reiniciar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bot-details">
+                        <p>Status: <span class="${bot.status === 'online' ? 'text-green' : 'text-red'}">${statusText}</span></p>
+                        <p>Última reinicialização: ${bot.lastRestart}</p>
+                    </div>
+                `;
+                
+                botsContainer.appendChild(botCard);
+            });
+            
+            // Adicionar event listeners para botões
+            document.querySelectorAll('.view-logs-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const botId = parseInt(this.getAttribute('data-id'));
+                    selectedBot = bots.find(bot => bot.id === botId);
+                    showLogsTab();
+                });
+            });
+            
+            document.querySelectorAll('.restart-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const botId = parseInt(this.getAttribute('data-id'));
+                    restartBot(botId);
+                });
+            });
+        }
+        
+        // Função para renderizar logs
+        function renderLogs() {
+            if (!selectedBot) return;
+            
+            logsBody.innerHTML = '';
+            
+            selectedBot.logs.forEach(log => {
+                const logRow = document.createElement('div');
+                logRow.className = 'log-row';
+                
+                logRow.innerHTML = `
+                    <div class="log-time">${log.timestamp}</div>
+                    <div>
+                        <span class="log-type log-type-${log.type}">${log.type}</span>
+                    </div>
+                    <div>${log.message}</div>
+                `;
+                
+                logsBody.appendChild(logRow);
+            });
+        }
+        
+        // Função para reiniciar um bot
+        function restartBot(id) {
+            const bot = bots.find(bot => bot.id === id);
+            if (bot) {
+                bot.status = 'online';
+                
+                const now = new Date();
+                const formattedDate = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+                bot.lastRestart = formattedDate;
+                
+                // Adicionar log de reinicialização
+                bot.logs.unshift({
+                    timestamp: formattedDate,
+                    type: 'info',
+                    message: 'Bot foi reiniciado manualmente'
+                });
+                
+                // Atualizar interface
+                renderBots();
+                
+                if (selectedBot && selectedBot.id === id) {
+                    renderLogs();
+                }
+            }
+        }
+        
+        // Event Listeners
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+            login(username, password);
+        });
+        
+        logoutBtn.addEventListener('click', function() {
+            logout();
+        });
+        
+        statusTab.addEventListener('click', function() {
+            showStatusTab();
+        });
+        
+        logsTab.addEventListener('click', function() {
+            if (selectedBot) {
+                showLogsTab();
+            }
+        });
+        
+        backToStatus.addEventListener('click', function() {
+            showStatusTab();
+        });
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gerar logs de exemplo
+            generateLogs();
+            
+            // Renderizar bots
+            renderBots();
+        });
+    </script>
+</body>
+</html>
